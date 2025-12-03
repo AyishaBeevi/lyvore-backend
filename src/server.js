@@ -29,8 +29,8 @@ app.use(express.json());
 app.use(
   cors({
     origin: [
-      "https://lyvore-frontend.vercel.app",
-      "https://lyvore-admin-etjv.vercel.app",
+      "https://lyvore-frontend-eyk2.vercel.app",
+      "https://lyvore-admin.vercel.app",
     ],
     credentials: true,
   })
