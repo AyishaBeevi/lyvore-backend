@@ -28,10 +28,14 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(
   cors({
-    origin: '*',
+    origin: [
+      "https://lyvore-frontend.vercel.app",
+      "https://lyvore-admin-etjv.vercel.app",
+    ],
     credentials: true,
   })
 );
+
 
 // ---------------- Routes ----------------
 app.use('/api/auth', authRoutes);
