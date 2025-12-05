@@ -8,21 +8,21 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:5000/your-db-nam
 
 const sampleAddresses = [
   {
-    line1: '123 Main Street',
+    address: '123 Main Street',
     city: 'Mumbai',
     state: 'Maharashtra',
     country: 'India',
     zip: '400001',
   },
   {
-    line1: '456 Park Avenue',
+    address: '456 Park Avenue',
     city: 'Delhi',
     state: 'Delhi',
     country: 'India',
     zip: '110001',
   },
   {
-    line1: '789 Ocean Drive',
+    address: '789 Ocean Drive',
     city: 'Bangalore',
     state: 'Karnataka',
     country: 'India',

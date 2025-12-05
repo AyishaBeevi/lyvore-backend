@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 const addressSchema = new mongoose.Schema(
   {
-    line1: String,
+    address: String,
     city: String,
     state: String,
     country: String,

@@ -55,7 +55,6 @@ export const updateProduct = asyncHandler(async (req, res) => {
   };
 
   const updated = await Product.findByIdAndUpdate(id, updatedFields, { new: true });
-
   if (!updated) {
     return res.status(404).json({ message: 'Product not found' });
   }
@@ -92,7 +91,6 @@ export const getProductStats = asyncHandler(async (req, res) => {
     const item = order.products.find(p => p.productId.toString() === id);
     return total + (item?.quantity || 0);
   }, 0);
-
   res.status(200).json({ productId: id, sales, views });
 });
 

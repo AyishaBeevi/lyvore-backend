@@ -1,3 +1,6 @@
 .env
-node_modules
 src/hashPassword.js
+node_modules/
+/dist
+.env.local
+.env.*.local

@@ -1,161 +1,3 @@
-// import express from 'express';
-// import { asyncHandler } from '../utils/asyncHandler.js';
-// import { createProduct, updateProduct } from '../controllers/productController.js'
-// import Product from '../models/Product.js';
-// import { auth, requireAdmin } from '../utils/auth.js';
-// import multer from 'multer';
-// import fs from 'fs';
-// import path from 'path';
-// import slugify from 'slugify';
-
-
-// const router = express.Router();
-
-// // Ensure uploads folder exists
-// const uploadDir = './src/uploads';
-// if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
-
-// // Configure multer
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => cb(null, uploadDir),
-//   filename: (req, file, cb) => {
-    
-//     const safeName = file.originalname
-//       .replace(/\s+/g, '-')    // replace spaces with dashes
-//       .replace(/[()]/g, '')    // remove parentheses
-//       .replace(/[^a-zA-Z0-9.-]/g, ''); // remove any other unsafe chars
-
-//     cb(null, `${Date.now()}-${safeName}`);
-//   },
-// });
-
-// const upload = multer({ storage });
-
-
-// // ----------------- Public Routes -----------------
-
-// // Get all products
-// router.get(
-//   '/',
-//   asyncHandler(async (req, res) => {
-//     const products = await Product.find().sort('-createdAt');
-//     res.json({ products });
-//   })
-// );
-
-// // Get single product by slug
-// router.get(
-//   '/:slug',
-//   asyncHandler(async (req, res) => {
-//     const product = await Product.findOne({ slug: req.params.slug });
-//     if (!product) return res.status(404).json({ message: 'Not found' });
-//     res.json({ product });
-//   })
-// );
-
-// // Get single product by ID (for admin edit page)
-// router.get(
-//   '/id/:id',
-//   asyncHandler(async (req, res) => {
-//     const product = await Product.findById(req.params.id);
-//     if (!product) return res.status(404).json({ message: 'Product not found' });
-//     res.json({ product });
-//   })
-// );
-
-// router.get(
-//   '/slug/:slug',
-//   asyncHandler(async (req, res) => {
-//     const product = await Product.findOne({ slug: req.params.slug });
-//     if (!product) return res.status(404).json({ message: 'Product not found' });
-//     res.json({ product });
-//   })
-// );
-
-
-
-// // ----------------- Admin Routes -----------------
-
-// // Add New Product
-// router.post(
-//   '/',
-//   auth,
-//   requireAdmin,
-//   upload.array('images', 5), // limit max 5 images
-//   asyncHandler(async (req, res) => {
-//     const { name, price, stock, description, category, tags } = req.body;
-
-//     if (!name || !price) return res.status(400).json({ message: 'Name and price are required' });
-
-//     const slug = slugify(name, { lower: true, strict: true });
-//     const images = req.files ? req.files.map(f => `/uploads/${f.filename}`) : [];
-
-//     const product = await Product.create({
-//       name,
-//       slug,
-//       price,
-//       stock: stock || 0,
-//       description,
-//       category,
-//       tags: tags ? tags.split(',') : [],
-//       images,
-//     });
-
-//     res.status(201).json({ product });
-//   })
-// );
-
-// // Edit Product
-// router.put(
-//   '/:id',
-//   auth,
-//   requireAdmin,
-//   upload.array('images', 5),
-//   asyncHandler(async (req, res) => {
-//     const { name, price, stock, description, category, tags, existingImages } = req.body;
-
-//     let images = [];
-
-//     // Merge existing images (if any)
-//     if (existingImages) {
-//       if (Array.isArray(existingImages)) images = existingImages.filter(i => typeof i === 'string');
-//       else if (typeof existingImages === 'string') images = [existingImages];
-//     }
-
-//     // Add new uploaded images
-//     if (req.files?.length > 0) {
-//       const newImages = req.files.map(f => `/uploads/${f.filename}`);
-//       images = [...images, ...newImages];
-//     }
-
-//     const updatedFields = {
-//       ...(name && { name, slug: slugify(name, { lower: true, strict: true }) }),
-//       ...(price && { price }),
-//       ...(stock !== undefined && { stock }),
-//       ...(description && { description }),
-//       ...(category && { category }),
-//       ...(tags && { tags: tags.split(',') }),
-//       images,
-//     };
-
-//     const product = await Product.findByIdAndUpdate(req.params.id, updatedFields, { new: true });
-
-//     res.json({ product });
-//   })
-// );
-
-// // Delete Product
-// router.delete(
-//   '/:id',
-//   auth,
-//   requireAdmin,
-//   asyncHandler(async (req, res) => {
-//     await Product.findByIdAndDelete(req.params.id);
-//     res.json({ ok: true });
-//   })
-// );
-
-// export default router;
 import express from 'express';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { getProductStats } from '../controllers/productController.js';
@@ -245,7 +87,7 @@ router.post(
   requireAdmin,
   upload.array('images', 5),
   asyncHandler(async (req, res) => {
-    const { name, price, stock, description, category, tags } = req.body;
+    const { name, price, stock, description, category, tags, discount } = req.body;
 
     if (!name || !price)
       return res.status(400).json({ message: 'Name and price are required' });
@@ -294,6 +136,8 @@ router.put(
       description: req.body.description,
       category: req.body.category,
       tags: req.body.tags ? req.body.tags.split(",") : [],
+      discount: req.body.discount,
+      discountedPrice: req.body.calculatedPrice,
     };
 
     // New images uploaded → replace old ones
@@ -308,6 +152,7 @@ router.put(
 
     const updated = await Product.findByIdAndUpdate(id, updateData, {
       new: true,
+      runValidators: true,
     });
 
     if (!updated)
