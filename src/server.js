@@ -119,7 +119,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173', // local frontend
   'http://localhost:5174',
-  'https://lyvore-frontend-eyk2.vercel.app', // deployed frontend
+  'https://lyvore-frontend.vercel.app', // deployed frontend
   'https://lyvore-admin.vercel.app', // deployed admin frontend
 ];
 
