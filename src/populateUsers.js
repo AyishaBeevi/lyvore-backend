@@ -4,7 +4,7 @@ import User from './models/User.js';
 
 dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:5000/your-db-name';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:5000/db';
 
 const sampleAddresses = [
   {

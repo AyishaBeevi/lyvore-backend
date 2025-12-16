@@ -14,7 +14,7 @@ export const auth = (req, res, next) => {
 };
 
 export const requireAdmin = (req,res,next)=>{
-  if(req.user?.role !== 'admin') return res.status(403).json({message:'Admin only'})
+  if(req.user?.role !== 'admin') return res.status(403).json({message:' only'})
   next()
 }
 
